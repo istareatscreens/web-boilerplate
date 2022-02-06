@@ -1,0 +1,63 @@
+const path = require("path");
+const webpack = require("webpack");
+const autoprefixer = require("autoprefixer");
+
+module.exports = {
+  entry: ["./src/js/index.ts", "./src/css/main.scss"],
+  output: {
+    filename: "[name].js",
+  },
+  devtool: "inline-source-map",
+  target: "web",
+  module: {
+    rules: [
+      {
+        test: /\.(tsx?|jsx?|vue)$/,
+        exclude: /node_modules/,
+        use: "babel-loader",
+      },
+      {
+        test: /\.(png|jpe?g|svg|gif)$/i,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
+      },
+      {
+        test: /\.(sass|less|css|scss)$/,
+        test: /\.scss$/,
+        use: [
+          { loader: "style-loader" },
+          {
+            loader: "file-loader",
+            options: {
+              name: "bundle.css",
+            },
+          },
+          { loader: "extract-loader" },
+          { loader: "css-loader" },
+          {
+            loader: "postcss-loader",
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              // Prefer Dart Sass
+              implementation: require("sass"),
+
+              // See https://github.com/webpack-contrib/sass-loader/issues/804
+              webpackImporter: false,
+              sassOptions: {
+                includePaths: ["./node_modules"],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", "jsx", "vue"],
+  },
+};

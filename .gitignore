@@ -1,0 +1,36 @@
+#Ignore node modules folder
+node_modules
+
+#Ignore compiled JavaScript/cpp folder
+lib
+public
+build
+dist
+out
+*.tgz
+#Ignore Ide files
+.vscode
+debug.log
+.vs
+
+#Ignore text files (used for notes)
+*.txt
+*.txt.swp
+*.notes.swp
+
+#Ignore performance testing file
+performance
+
+#Testing Reports
+report*
+coverage
+.nyc_output
+nyc
+*.lcov
+
+# Ignore Mac
+.DS_Store
+
+# Env files
+.env
+!.env-test

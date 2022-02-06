@@ -1,0 +1,35 @@
+@mixin absolute-axis-xy($top: 50%, $left: 50%) {
+  position: absolute;
+  left: $left;
+  top: $top;
+  transform: translate(-50%, -50%);
+}
+
+@mixin respond($breakpoint) {
+  @if $breakpoint == medium-size {
+    @media (max-width: 800px) {
+      @content;
+    }
+    @media (max-height: 800px) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == small-size {
+    @media (max-width: 500px) {
+      @content;
+    }
+    @media (max-height: 500px) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tiny-size {
+    @media (max-width: 350px) {
+      @content;
+    }
+    @media (max-height: 350px) {
+      @content;
+    }
+  }
+}
