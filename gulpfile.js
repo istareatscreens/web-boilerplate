@@ -41,7 +41,7 @@ function jsDevTask() {
 }
 
 function htmlDevTask() {
-  return src([htmlPath]).pipe(gulp.dest("public"));
+  return src([htmlPath]).pipe(gulp.dest(output));
 }
 
 function cssDevTask() {
@@ -54,7 +54,7 @@ function cssDevTask() {
 function browserSyncServe(cb) {
   browserSync.init({
     server: {
-      baseDir: "./public/",
+      baseDir: output,
       ghostMode: false, // mirrors browser actions across devices
     },
   });
@@ -100,7 +100,7 @@ function jsTask() {
 }
 
 function cleanTask() {
-  return del(["public/**/*"]);
+  return del([`${output}**/*`]);
 }
 
 function htmlTask() {
@@ -111,7 +111,7 @@ function htmlTask() {
         type: "timestamp",
       })
     )
-    .pipe(gulp.dest("public"));
+    .pipe(gulp.dest(output));
 }
 
 function cssTask() {
