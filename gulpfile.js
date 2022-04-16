@@ -55,8 +55,9 @@ function browserSyncServe(cb) {
   browserSync.init({
     server: {
       baseDir: output,
-      ghostMode: false, // mirrors browser actions across devices
     },
+    ghostMode: false, // mirrors browser actions across devices
+    open: true, // prevents browser from opening automatically if set to false
   });
   cb();
 }
