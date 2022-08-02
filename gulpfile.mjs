@@ -1,13 +1,17 @@
 "use strict";
 
-const gulp = require("gulp");
-const sourcemaps = require("gulp-sourcemaps");
-const browserSync = require("browser-sync");
-const { src, series, parallel, dest } = require("gulp");
-const webpack = require("webpack-stream");
-const del = require("del");
-const htmlmin = require("gulp-htmlmin");
-var cachebust = require("gulp-cache-bust");
+// https://gist.github.com/noraj/007a943dc781dc8dd3198a29205bae04
+import gulp from "gulp";
+const { src, task, series, parallel, dest } = gulp;
+import sourcemaps from "gulp-sourcemaps";
+import browserSync from "browser-sync";
+import webpack from "webpack-stream";
+import { deleteAsync as del } from "del";
+import htmlmin from "gulp-htmlmin";
+import cachebust from "gulp-cache-bust";
+
+import webpackProd from "./webpack.prod.js";
+import webpackDev from "./webpack.dev.js";
 
 // Paths
 const output = "./public/";
@@ -21,7 +25,7 @@ const wasmPath = "src/wasm/*.wasm";
 // Common Tasks
 function imageTask() {
   return src([imagePath, `!${icoPath}`])
-    .pipe(webpack(require("./webpack.prod.js")))
+    .pipe(webpack(webpackProd))
     .pipe(dest(output));
 }
 
@@ -36,7 +40,7 @@ function wasmTask() {
 // Development Tasks
 function jsDevTask() {
   return src([jsPath, "!node_modules"])
-    .pipe(webpack(require("./webpack.dev.js")))
+    .pipe(webpack(webpackDev))
     .pipe(dest(output));
 }
 
@@ -47,7 +51,7 @@ function htmlDevTask() {
 function cssDevTask() {
   return src([cssPath + ".scss", cssPath + ".css"])
     .pipe(sourcemaps.init())
-    .pipe(webpack(require("./webpack.dev.js")))
+    .pipe(webpack(webpackDev))
     .pipe(dest(output));
 }
 
@@ -96,7 +100,7 @@ function watchTask() {
 // Production Tasks
 function jsTask() {
   return src([jsPath, "!node_modules"])
-    .pipe(webpack(require("./webpack.prod.js")))
+    .pipe(webpack(webpackProd))
     .pipe(dest(output));
 }
 
@@ -118,19 +122,25 @@ function htmlTask() {
 function cssTask() {
   return src([cssPath + ".scss", cssPath + ".css"])
     .pipe(sourcemaps.init())
-    .pipe(webpack(require("./webpack.prod.js")))
+    .pipe(webpack(webpackProd))
     .pipe(dest(output));
 }
 
 // BUILD Web Production
-exports.default = series(
-  parallel(cleanTask, jsTask, cssTask, icoTask, imageTask, wasmTask),
-  htmlTask
+task(
+  "default",
+  series(
+    parallel(cleanTask, jsTask, cssTask, icoTask, imageTask, wasmTask),
+    htmlTask
+  )
 );
 
 // BUILD Web Development
-exports.watch = series(
-  parallel(jsDevTask, cssDevTask, htmlDevTask, icoTask, imageTask, wasmTask),
-  browserSyncServe,
-  watchTask
+task(
+  "watch",
+  series(
+    parallel(jsDevTask, cssDevTask, htmlDevTask, icoTask, imageTask, wasmTask),
+    browserSyncServe,
+    watchTask
+  )
 );
